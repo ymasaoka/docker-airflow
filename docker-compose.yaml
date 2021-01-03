@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  web:
+    image: apache/airflow:2.0.0
+    container_name: airflow
+    ports:
+      - 8080:8080
+    volumes:
+      - ./opt/airflow:/opt/airflow
+    command: db init # Use fist time only
+    # command: webserver # Using with docker-compose up after exec `db init`
