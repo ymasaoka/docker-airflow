@@ -9,4 +9,6 @@ services:
     volumes:
       - ./opt/airflow:/opt/airflow
     command: db init # Use fist time only
-    # command: webserver # Using with docker-compose up after exec `db init`
+    # Using with docker-compose up after exec `db init`
+    # command: >
+    #   bash -c "airflow webserver -p 8080 -D && airflow scheduler -D"
