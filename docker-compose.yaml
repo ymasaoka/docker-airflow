@@ -1,14 +1,41 @@
 version: '3'
 
 services:
-  web:
+  postgres:
+    image: postgres:11
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data
+  
+  scheduler:
     image: apache/airflow:2.0.0
-    container_name: airflow
+    container_name: airflow-scheduler
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+    command: scheduler
+
+  webserver:
+    image: apache/airflow:2.0.0
+    container_name: airflow-webserver
+    restart: always
+    env_file:
+      - .env
     ports:
       - 8080:8080
+    depends_on:
+      - scheduler
+      - postgres
     volumes:
-      - ./opt/airflow:/opt/airflow
-    command: db init # Use fist time only
-    # Using with docker-compose up after exec `db init`
-    # command: >
-    #   bash -c "airflow webserver -p 8080 -D && airflow scheduler -D"
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+    # command: db init # Use fist time only
+    command: webserver # Using with docker-compose up after exec `db init`
