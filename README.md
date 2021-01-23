@@ -9,6 +9,7 @@ A simple Apache Airflow environment using Docker and Docker Compose.
 1. **Switch branches** according to the repository DB type
     - SQLite: Use the `main` branch
     - PostgreSQL: Use the `repos-postgres` branch
+    - MySQL: Use the `repos-mysql` branch
 1. **Change the command** in the `webserver` container to `db init`
 1. **Run** `docker-compose up` to initialize the DB and exit with` Ctrl + C` when complete
 1. **Change the command** in the `webserver` container to `webserver`
