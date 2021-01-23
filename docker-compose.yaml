@@ -1,14 +1,20 @@
 version: '3'
 
 services:
-  postgres:
-    image: postgres:11
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
     environment:
-      - POSTGRES_USER=airflow
-      - POSTGRES_PASSWORD=airflow
-      - POSTGRES_DB=airflow
+      MYSQL_ROOT_PASSWORD: P@ssw0rd
+      MYSQL_DATABASE: airflow
+      MYSQL_USER: airflow
+      MYSQL_PASSWORD: airflow
+    ports:
+        - 3306:3306
     volumes:
-      - ./data/postgresql:/var/lib/postgresql/data
+        - ./data/mysql:/var/lib/mysql
+        - ./conf:/etc/mysql/conf.d
   
   scheduler:
     image: apache/airflow:2.0.0
@@ -17,7 +23,7 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres
+      - mysql
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
@@ -26,14 +32,14 @@ services:
   webserver:
     image: apache/airflow:2.0.0
     container_name: airflow-webserver
-    restart: always
+    restart: on-failure
     env_file:
       - .env
     ports:
       - 8080:8080
     depends_on:
       - scheduler
-      - postgres
+      - mysql
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
