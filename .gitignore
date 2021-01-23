@@ -1,1 +1,4 @@
+/dags/__pycache__
+/data/postgresql/*
+/logs/*
 /opt
