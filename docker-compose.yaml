@@ -26,7 +26,7 @@ services:
   webserver:
     image: apache/airflow:2.0.0
     container_name: airflow-webserver
-    restart: always
+    restart: on-failure
     env_file:
       - .env
     ports:
